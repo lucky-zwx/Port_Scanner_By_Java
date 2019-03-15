@@ -3,6 +3,8 @@ package Scanner;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +33,7 @@ public class Scanner extends Thread {
         //System.out.println("线程" + (p[0] + 1) + "已经启动!" );
         for (int i = p[0]; i < p[1]; i++) {
             try {
-                s = new Socket("IP地址填写", i); //通过这样的方法来判断端口是否开启 , 如果没有连接上会抛出异常
+                s = new Socket("127.0.0.1", i); //通过这样的方法来判断端口是否开启 , 如果没有连接上会抛出异常
                 openPorts.add(i);
                 System.out.println("扫描到端口:" + i);  //解决的问题是每扫描完一个建立连接非常消耗资源 所以一定要关闭
                 s.close();
@@ -51,7 +53,7 @@ public class Scanner extends Thread {
      * @param args
      */
     public static void main(String[] args) {
-        long start = System.currentTimeMillis();
+        Instant start = Instant.now();
         for (int i = 0; i < 6000; i += 100) {     //创建6000个线程........ 本质上扫描了60000个端口
             Thread t = new Scanner(new int[]{
                     i + 1, i + 100             // 1 , 100  ; 2 : 200
@@ -68,10 +70,10 @@ public class Scanner extends Thread {
             }
         }
 
-        long end = System.currentTimeMillis();
+        Instant end = Instant.now();
 
 
-        System.out.println("扫描时间为:" + (end - start));
+        System.out.println("扫描时间为:" + Duration.between(start, end).toMinutes() + "分钟");
 
     }
 
